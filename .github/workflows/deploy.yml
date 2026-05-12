@@ -1,0 +1,31 @@
+name: Deploy GCP Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: projects/917465736776/locations/global/workloadIdentityPools/github-pool/providers/github-provider
+          service_account: github-deployer@rajesh-ecp-project.iam.gserviceaccount.com
+
+      - name: Setup GCloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Upload DAGs
+        run: |
+          gcloud storage cp dags/* gs://us-central1-lloyds-bank-air-ef9ce337-bucket/dags/
+
+      - name: Upload PySpark
+        run: |
+          gcloud storage cp pyspark/* gs://rajesh-demo-project/pyspark/
