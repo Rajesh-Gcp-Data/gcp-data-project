@@ -26,6 +26,9 @@ jobs:
       - name: Setup GCloud SDK
         uses: google-github-actions/setup-gcloud@v2
 
+      - name: Verify Auth
+        run: gcloud auth list
+
       - name: Upload DAGs
         run: |
           gcloud storage cp dags/* gs://us-central1-lloyds-bank-air-ef9ce337-bucket/dags/
